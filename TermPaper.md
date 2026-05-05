@@ -46,12 +46,13 @@ The application includes these main features:
 - Table transfer and table merge operations.
 - Table states for Available, Reserved, and Cleaning.
 - Menu management with stock tracking and item availability.
+- ADO.NET CRUD operations for the MenuItems database entity.
 - Local persistent storage between application runs.
 - Summary panel for active orders, ready orders, and paid revenue.
 
 ## 5. Technologies Used
 
-The project is developed as a C# Windows Forms application. It uses .NET Framework 4.8 and System.Windows.Forms for the user interface. The application stores data locally by serializing the application state, so menu items, table states, orders, payments, and stock values can remain available between application runs.
+The project is developed as a C# Windows Forms application. It uses .NET Framework 4.8 and System.Windows.Forms for the user interface. ADO.NET with SQL Server LocalDB is used for database connectivity and CRUD operations on the MenuItems table. The application also stores operational state locally, so table states, orders, payments, and runtime values can remain available between application runs.
 
 ## 6. System Design
 
@@ -63,6 +64,8 @@ The system uses several model classes:
 - RestaurantTable stores table number, active order state, reservation/cleaning state, and timing information.
 - WaiterAccount stores login identity and role information.
 - PaymentRecord stores cash/card payment history.
+
+The database layer creates a SQL Server LocalDB database named RestaurantOrderKitchenTrackingSystemDb. The MenuItems entity supports Create, Read, Update, and Delete operations through ADO.NET SqlConnection and SqlCommand.
 
 The application starts with a waiter login form. After successful login, the main form contains three workflow areas. The left side is used for table layout monitoring. The center is used for order entry and ingredient customization. The right side is used for kitchen tracking, filtering, status management, elapsed time monitoring, and receipt preview.
 

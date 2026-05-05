@@ -269,9 +269,12 @@ namespace RestaurantOrderKitchenTrackingSystem
             restockButton.Click += delegate { RestockSelectedMenuItem(); };
             var toggleItemButton = SecondaryButton("Toggle Item");
             toggleItemButton.Click += delegate { ToggleSelectedMenuItem(); };
+            var deleteItemButton = DangerButton("Delete Item");
+            deleteItemButton.Click += delegate { DeleteSelectedMenuItem(); };
             menuAdminRow.Controls.Add(addMenuButton);
             menuAdminRow.Controls.Add(restockButton);
             menuAdminRow.Controls.Add(toggleItemButton);
+            menuAdminRow.Controls.Add(deleteItemButton);
             layout.Controls.Add(menuAdminRow, 0, 10);
 
             panel.Controls.Add(layout);
@@ -427,10 +430,23 @@ namespace RestaurantOrderKitchenTrackingSystem
 
         private void LoadOrSeedData()
         {
-            var state = DataStore.Load();
-            if (state != null && state.MenuItems != null && state.Orders != null && state.Tables != null)
+            DatabaseService.Initialize();
+            _menuItems.AddRange(DatabaseService.GetMenuItems());
+            if (_menuItems.Count == 0)
             {
-                _menuItems.AddRange(state.MenuItems);
+                SeedMenu();
+                foreach (var item in _menuItems)
+                {
+                    DatabaseService.InsertMenuItem(item);
+                }
+
+                _menuItems.Clear();
+                _menuItems.AddRange(DatabaseService.GetMenuItems());
+            }
+
+            var state = DataStore.Load();
+            if (state != null && state.Orders != null && state.Tables != null)
+            {
                 _orders.AddRange(state.Orders);
                 _tables.AddRange(state.Tables);
                 _nextOrderId = Math.Max(state.NextOrderId, _orders.Count == 0 ? 1001 : _orders.Max(order => order.Id) + 1);
@@ -438,7 +454,6 @@ namespace RestaurantOrderKitchenTrackingSystem
             }
 
             SeedTables();
-            SeedMenu();
             SeedDemoOrders();
             SaveState();
         }
@@ -628,6 +643,7 @@ namespace RestaurantOrderKitchenTrackingSystem
             foreach (var line in _currentLines)
             {
                 line.Item.StockQuantity -= line.Quantity;
+                DatabaseService.UpdateMenuItem(line.Item);
             }
 
             var tableNumber = (int)_tableInput.Value;
@@ -1027,7 +1043,9 @@ namespace RestaurantOrderKitchenTrackingSystem
             }
 
             var nextId = _menuItems.Count == 0 ? 1 : _menuItems.Max(item => item.Id) + 1;
-            _menuItems.Add(new MenuItem(nextId, parts[0].Trim(), parts[1].Trim(), price, prepMinutes, parts[5].Split(',').Select(item => item.Trim()), stock));
+            var newItem = new MenuItem(nextId, parts[0].Trim(), parts[1].Trim(), price, prepMinutes, parts[5].Split(',').Select(item => item.Trim()), stock);
+            DatabaseService.InsertMenuItem(newItem);
+            _menuItems.Add(newItem);
             RefreshMenu();
             SaveState();
         }
@@ -1054,6 +1072,7 @@ namespace RestaurantOrderKitchenTrackingSystem
 
             item.StockQuantity += stock;
             item.IsActive = true;
+            DatabaseService.UpdateMenuItem(item);
             RefreshMenu();
             SaveState();
         }
@@ -1072,6 +1091,32 @@ namespace RestaurantOrderKitchenTrackingSystem
             }
 
             item.IsActive = !item.IsActive;
+            DatabaseService.UpdateMenuItem(item);
+            RefreshMenu();
+            SaveState();
+        }
+
+        private void DeleteSelectedMenuItem()
+        {
+            if (!EnsureRole(UserRole.Manager))
+            {
+                return;
+            }
+
+            var item = _menuList.SelectedItem as MenuItem;
+            if (item == null)
+            {
+                return;
+            }
+
+            var result = MessageBox.Show("Delete " + item.Name + " from the database?", "Delete Menu Item", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result != DialogResult.Yes)
+            {
+                return;
+            }
+
+            DatabaseService.DeleteMenuItem(item.Id);
+            _menuItems.Remove(item);
             RefreshMenu();
             SaveState();
         }
@@ -1201,6 +1246,7 @@ namespace RestaurantOrderKitchenTrackingSystem
             foreach (var line in order.Lines)
             {
                 line.Item.StockQuantity += line.Quantity;
+                DatabaseService.UpdateMenuItem(line.Item);
             }
         }
 

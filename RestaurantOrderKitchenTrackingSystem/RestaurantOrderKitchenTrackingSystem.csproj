@@ -34,12 +34,14 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Models.cs" />
+    <Compile Include="DatabaseService.cs" />
     <Compile Include="DataStore.cs" />
     <Compile Include="PromptDialog.cs" />
     <Compile Include="PaymentMethodForm.cs" />

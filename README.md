@@ -36,6 +36,7 @@ The application is not a car rental or rental-related system. It focuses on a re
 - Mark tables as Available, Reserved, or Cleaning.
 - Add menu items, restock items, and toggle item availability.
 - Persist application data locally between runs.
+- Use ADO.NET with SQL Server LocalDB for MenuItems CRUD operations.
 
 ## How To Run
 
@@ -54,6 +55,13 @@ Demo login accounts:
 
 ## Implemented Advanced Features
 
+- SQL Server LocalDB database: `RestaurantOrderKitchenTrackingSystemDb`
+- ADO.NET table: `MenuItems`
+- Menu CRUD:
+  - Create: `Add Menu`
+  - Read: menu list loads from SQL
+  - Update: `Restock` and `Toggle Item`
+  - Delete: `Delete Item`
 - Local persistence is stored under the user's application data folder.
 - Receipts are exported to text files.
 - Day report shows paid order count, cancelled order count, cash total, card total, grand total, best-selling item, and waiter order counts.
