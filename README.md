@@ -71,3 +71,9 @@ Demo login accounts:
 ## GitHub Submission
 
 Upload this repository to GitHub and submit the repository link with the term paper text.
+
+## Submission Files
+
+- `TermPaper.md`: report on the developed software.
+- `DatabaseDiagram.md`: database diagram, table description, CRUD mapping, relationships, and trigger explanation.
+- `DefenseGuide.md`: live defense guide and recommended demo flow.

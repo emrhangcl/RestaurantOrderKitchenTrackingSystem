@@ -69,10 +69,31 @@ The database layer creates a SQL Server LocalDB database named RestaurantOrderKi
 
 The application starts with a waiter login form. After successful login, the main form contains three workflow areas. The left side is used for table layout monitoring. The center is used for order entry and ingredient customization. The right side is used for kitchen tracking, filtering, status management, elapsed time monitoring, and receipt preview.
 
-## 7. Future Work
+## 7. Database Design
+
+The database diagram is provided in `DatabaseDiagram.md`. The required database entity is `MenuItems`, which stores menu item records and supports full CRUD operations through ADO.NET.
+
+The table contains item identity, name, category, price, preparation time, ingredients, stock quantity, and active/passive availability status. No database triggers are used; stock updates are handled in the application layer through ADO.NET update commands.
+
+## 8. CRUD Implementation
+
+The CRUD implementation is located in `RestaurantOrderKitchenTrackingSystem/DatabaseService.cs`.
+
+- Create: `InsertMenuItem()` inserts a new menu record.
+- Read: `GetMenuItems()` reads records from the `MenuItems` table.
+- Update: `UpdateMenuItem()` updates price, stock, category, ingredients, and availability values.
+- Delete: `DeleteMenuItem()` deletes a menu record.
+
+The user can execute these operations from the manager interface using Add Menu, Restock, Toggle Item, and Delete Item actions.
+
+## 9. Defense Preparation
+
+A live defense guide is provided in `DefenseGuide.md`. It explains demo accounts, suggested presentation flow, ADO.NET locations in the code, CRUD mapping, and authorization logic.
+
+## 10. Future Work
 
 Future versions can add SQL Server or SQLite storage, graphical charts, PDF receipt export, barcode-based inventory updates, and networked multi-device kitchen screens.
 
-## 8. Conclusion
+## 11. Conclusion
 
 The Restaurant Order & Kitchen Tracking System provides a practical Windows Forms project topic for the term assignment. It demonstrates form design, event handling, model classes, collection management, data binding, and workflow tracking in a real restaurant environment.
