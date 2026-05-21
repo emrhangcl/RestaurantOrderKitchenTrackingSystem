@@ -75,5 +75,6 @@ Upload this repository to GitHub and submit the repository link with the term pa
 ## Submission Files
 
 - `TermPaper.md`: report on the developed software.
+- `SoftwareReport.md`: assignment-format report with three sections, screenshots, and complete source-code appendix.
 - `DatabaseDiagram.md`: database diagram, table description, CRUD mapping, relationships, and trigger explanation.
 - `DefenseGuide.md`: live defense guide and recommended demo flow.
